@@ -10,6 +10,7 @@ pub trait IdGen {
 #[derive(Clone,Debug)]
 pub enum Command {
     Ping(Ping),
+    Info(Info),
     InfoList(InfoList),
 }
 
@@ -18,6 +19,7 @@ impl Command {
     pub(crate) fn send_raw<W: AsyncWrite + 'static>(self, writer: W) -> Result<W> {
         let writer = match self {
             Command::Ping(c)     => await!(c.send_raw(writer))?,
+            Command::Info(c)     => await!(c.send_raw(writer))?,
             Command::InfoList(c) => await!(c.send_raw(writer))?,
         };
 
@@ -42,6 +44,20 @@ impl Ping {
 impl From<Ping> for Command {
     fn from(c: Ping) -> Self {
         Command::Ping(c)
+    }
+}
+
+#[derive(Clone,Debug)]
+pub struct Info(pub String, pub String);
+
+impl Info {
+    #[async]
+    pub(crate) fn send_raw<W: AsyncWrite + 'static>(self, writer: W) -> Result<W> {
+        let Info(id, name) = self;
+        let data = format!("({}) info {}\n", id, name);
+        let (writer, _) = await!(io::write_all(writer, data))?;
+
+        Ok(writer)
     }
 }
 
