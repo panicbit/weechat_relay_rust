@@ -1,10 +1,11 @@
 use std::io::Read;
+use std::fmt;
 use byteorder::ReadBytesExt;
 use super::{Tag,DecodableObject};
 use errors::*;
 
 #[derive(Debug,PartialEq,Eq,Hash)]
-pub struct Pointer(pub(super) String);
+pub struct Pointer(String);
 
 impl DecodableObject for Pointer {
     const TAG: Tag = b"ptr";
@@ -15,6 +16,20 @@ impl DecodableObject for Pointer {
 
         r.take(len as u64).read_to_string(&mut pointer)?;
 
+        // TODO: verify that `pointer` is hex encoded
+
         Ok(Pointer(pointer))
+    }
+}
+
+impl fmt::Display for Pointer {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "0x{}", self.0)
+    }
+}
+
+impl From<usize> for Pointer {
+    fn from(ptr: usize) -> Self {
+        Pointer(format!("{:x}", ptr))
     }
 }

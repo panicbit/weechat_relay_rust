@@ -78,7 +78,7 @@ impl fmt::Display for Object {
             Object::Long(n) => n.fmt(f),
             Object::Str(ref s) => s.as_str().fmt(f),
             Object::Buffer(..) => write!(f, "<buffer>"),
-            Object::Pointer(Pointer(ref str)) => write!(f, "0x{}", str),
+            Object::Pointer(ref ptr) => ptr.fmt(f),
             Object::Time(Time(time)) => time.fmt(f),
             Object::HashTable(..) => write!(f, "<hash_table>"),
             Object::Info(Info { ref name, ref value }) => write!(f, "({} => {})", name.as_str(), value.as_str()),
