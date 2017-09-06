@@ -15,6 +15,21 @@ impl Str {
     }
 }
 
+impl DecodableObject for Str {
+    const TAG: Tag = b"str";
+
+    fn decode_bare<R: Read + ?Sized>(r: &mut R) -> Result<Self> {
+        let buffer = match Buffer::decode_bare(r).map(Option::from)? {
+            None => return Ok(Str::from(None)),
+            Some(buffer) => buffer,
+        };
+
+        let string = String::from_utf8(buffer).chain_err(|| "err, not UTF8")?;
+
+        Ok(Str::from(string))
+    }
+}
+
 impl From<Str> for String {
     fn from(s: Str) -> Self {
         s.0.unwrap_or_else(String::new)
@@ -42,21 +57,5 @@ impl From<Option<String>> for Str {
 impl<'a> From<&'a str> for Str {
     fn from(s: &str) -> Self {
         Str(Some(String::from(s)))
-    }
-}
-
-impl DecodableObject for Str {
-    const TAG: Tag = b"str";
-
-    fn decode_bare<R: Read + ?Sized>(r: &mut R) -> Result<Self> {
-        let buffer = match Buffer::decode_bare(r)? {
-            None => return Ok(Str::from(None)),
-            Some(buffer) => buffer,
-        };
-
-        
-        let string = String::from_utf8(buffer).chain_err(|| "err, not UTF8")?;
-
-        Ok(Str::from(string))
     }
 }
