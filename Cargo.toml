@@ -14,4 +14,4 @@ typemap = "0.3.3"
 
 [dependencies.futures-await]
 git = "https://github.com/alexcrichton/futures-await"
-rev = "4a461ef8"
+rev = "095a3583"
