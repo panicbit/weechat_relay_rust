@@ -1,4 +1,5 @@
 use std::io::Read;
+use std::ops::Deref;
 use super::{Tag,DecodableObject,Buffer};
 use errors::*;
 
@@ -27,6 +28,13 @@ impl DecodableObject for Str {
         let string = String::from_utf8(buffer).chain_err(|| "err, not UTF8")?;
 
         Ok(Str::from(string))
+    }
+}
+
+impl Deref for Str {
+    type Target = str;
+    fn deref(&self) -> &str {
+        self.as_str()
     }
 }
 
