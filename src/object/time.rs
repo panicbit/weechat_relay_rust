@@ -1,10 +1,11 @@
 use std::io::Read;
+use std::fmt;
 use byteorder::ReadBytesExt;
 use super::{Tag,DecodableObject,Buffer};
 use errors::*;
 
 #[derive(Debug,PartialEq,Eq,Hash)]
-pub struct Time(pub(super) u64);
+pub struct Time(String);
 
 impl DecodableObject for Time {
     const TAG: Tag = b"tim";
@@ -15,8 +16,18 @@ impl DecodableObject for Time {
 
         r.take(len as u64).read_to_string(&mut buf)?;
 
-        let n = buf.parse::<u64>().chain_err(|| ErrorKind::Decoding)?;
+        Ok(Time(buf))
+    }
+}
 
-        Ok(Time(n))
+impl fmt::Display for Time {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl From<u64> for Time {
+    fn from(time: u64) -> Time {
+        Time(time.to_string())
     }
 }
