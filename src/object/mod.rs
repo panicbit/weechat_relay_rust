@@ -17,6 +17,7 @@ mod array;
 mod char;
 mod int;
 mod long;
+#[cfg(test)] mod tests;
 
 pub use self::str::Str;
 pub use self::buffer::Buffer;
