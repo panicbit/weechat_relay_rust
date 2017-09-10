@@ -1,6 +1,6 @@
 use std::io::Read;
 use std::ops::Deref;
-use super::{Tag,DecodableObject,Buffer};
+use super::{Object,Tag,DecodableObject,Buffer};
 use errors::*;
 
 #[derive(Debug,PartialEq,Eq,Hash)]
@@ -35,6 +35,12 @@ impl Deref for Str {
     type Target = str;
     fn deref(&self) -> &str {
         self.as_str()
+    }
+}
+
+impl From<Str> for Object {
+    fn from(s: Str) -> Object {
+        Object::Str(s)
     }
 }
 

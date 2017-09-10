@@ -6,8 +6,18 @@ use errors::*;
 
 #[derive(Debug,PartialEq,Eq,Hash)]
 pub struct InfoList {
-    pub name: Str,
-    pub items: Vec<HashTable>,
+    name: Str,
+    items: Vec<HashTable>,
+}
+
+impl InfoList {
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn items(&self) -> &[HashTable] {
+        &self.items
+    }
 }
 
 impl DecodableObject for InfoList {
@@ -32,7 +42,7 @@ impl DecodableObject for InfoList {
                 item.insert(name, value);
             }
 
-            items.push(HashTable(item));
+            items.push(HashTable::from(item));
         }
 
         Ok(InfoList { name, items })

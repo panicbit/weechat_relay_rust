@@ -36,8 +36,8 @@ fn async_main(handle: Handle) -> Result<()> {
 
     let buffer = await!(client.infolist("buffer")).chain_err(|| "Error")?;
 
-    for (i, item) in buffer.items.into_iter().enumerate() {
-        if let Some(value) = item.0.get(&Object::Str("full_name".into())) {
+    for (i, item) in buffer.items().iter().enumerate() {
+        if let Some(value) = item.get(&Object::str("full_name")) {
             println!("{}", value);
         }
         // println!("Buffer #{}:", i);

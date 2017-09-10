@@ -7,7 +7,7 @@ use super::{Object,Tag,DecodableObject,read_tag};
 use errors::*;
 
 #[derive(Debug,PartialEq,Eq)]
-pub struct HashTable(pub HashMap<Object,Object>);
+pub struct HashTable(HashMap<Object,Object>);
 
 impl Hash for HashTable {
     fn hash<H>(&self, _state: &mut H) where
@@ -28,6 +28,19 @@ impl Deref for HashTable {
 impl DerefMut for HashTable {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
+    }
+}
+
+impl<K,V> From<HashMap<K,V>> for HashTable where
+    K: Into<Object> + Eq + Hash,
+    V: Into<Object>,
+{
+    fn from(hm: HashMap<K,V>) -> Self {
+        let hm = hm.into_iter()
+            .map(|(k,v)| (k.into(), v.into()))
+            .collect::<HashMap<_,_>>();
+
+        HashTable(hm)
     }
 }
 

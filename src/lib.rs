@@ -10,13 +10,16 @@ extern crate byteorder;
 extern crate libflate;
 extern crate typemap;
 extern crate hexdump;
+#[cfg(test)]
+#[macro_use]
+extern crate maplit;
 
 mod errors;
 mod raw;
 mod command;
 mod message;
 mod message_resolver;
-mod object;
+pub mod object;
 pub mod client;
 
 pub use object::Object;

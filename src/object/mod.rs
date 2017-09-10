@@ -46,6 +46,20 @@ pub enum Object {
 }
 
 impl Object {
+    pub fn char      <T: Into<Char     >>(t: T) -> Self { Object::Char     (t.into()) }
+    pub fn int       <T: Into<Int      >>(t: T) -> Self { Object::Int      (t.into()) }
+    pub fn long      <T: Into<Long     >>(t: T) -> Self { Object::Long     (t.into()) }
+    pub fn str       <T: Into<Str      >>(t: T) -> Self { Object::Str      (t.into()) }
+    pub fn buffer    <T: Into<Buffer   >>(t: T) -> Self { Object::Buffer   (t.into()) }
+    pub fn pointer   <T: Into<Pointer  >>(t: T) -> Self { Object::Pointer  (t.into()) }
+    pub fn time      <T: Into<Time     >>(t: T) -> Self { Object::Time     (t.into()) }
+    pub fn hash_table<T: Into<HashTable>>(t: T) -> Self { Object::HashTable(t.into()) }
+    pub fn info      <T: Into<Info     >>(t: T) -> Self { Object::Info     (t.into()) }
+    pub fn info_list <T: Into<InfoList >>(t: T) -> Self { Object::InfoList (t.into()) }
+    pub fn array     <T: Into<Array    >>(t: T) -> Self { Object::Array    (t.into()) }
+}
+
+impl Object {
     fn decode<R: Read + ?Sized>(r: &mut R) -> Result<Self> {
         let tag = read_tag(r).chain_err(|| "reading tag")?;
         let decode = Self::bare_decoder_from_tag(tag)?;
