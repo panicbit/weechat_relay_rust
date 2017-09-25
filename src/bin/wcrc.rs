@@ -5,6 +5,7 @@ extern crate tokio_core;
 extern crate futures_await as futures;
 extern crate error_chain;
 
+use std::env;
 use tokio_core::reactor::{Core,Handle};
 use tokio_core::net::TcpStream;
 use futures::prelude::*;
@@ -22,10 +23,7 @@ fn main() {
 
 #[async]
 fn async_main(handle: Handle) -> Result<()> {
-    let pass = ::std::env::vars()
-        .find(|&(ref k,_)| k == "WCP")
-        .map(|(_,v)| v)
-        .expect("Set the WCP env var to your relay password").clone();
+    let pass = env::var("WCP").expect("Set the WCP env var to your relay password");
 
     let addr = "192.168.2.11:3143".parse().unwrap();
     let conn = await!(TcpStream::connect(&addr, &handle))?;
